@@ -18,7 +18,9 @@ class MovieRepoImpl(
                    Movie(
                        title = it.title,
                        genre = it.releaseDate,
-                       imagePoster = it.posterPath
+                       imagePoster = it.posterPath,
+                       overview = it.overview,
+                       backdrop = it.backdropPath
                    )
                }
                Log.d(MovieRepoImpl::class.simpleName,
@@ -33,5 +35,34 @@ class MovieRepoImpl(
            Log.e(MovieRepoImpl::class.simpleName, "getPopularMovie error :${e.message} ", )
            return emptyList()
        }
+    }
+
+    override suspend fun getNowPlayingMovie(): List<Movie> {
+        try {
+            val response = service.getNowPlayingMovie()
+
+            if(response.isSuccessful){
+                val listMovie = response.body()
+                val listData = listMovie?.results?.map {
+                    Movie(
+                        title = it.title,
+                        genre = it.releaseDate,
+                        imagePoster = it.posterPath,
+                        overview = it.overview,
+                        backdrop = it.backdropPath
+                    )
+                }
+                Log.d(MovieRepoImpl::class.simpleName,
+                    "getNowPlayingMovie : ${Gson().toJsonTree(listData)}")
+                return listData ?: emptyList()
+            }else{
+                Log.e(MovieRepoImpl::class.simpleName,
+                    "getNowPlayingMovie error code: ${response.code()}", )
+                return emptyList()
+            }
+        }catch (e:Exception){
+            Log.e(MovieRepoImpl::class.simpleName, "getNowPlayingMovie error :${e.message} ", )
+            return emptyList()
+        }
     }
 }

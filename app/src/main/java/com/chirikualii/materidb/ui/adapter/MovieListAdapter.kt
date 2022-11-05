@@ -1,11 +1,13 @@
 package com.chirikualii.materidb.ui.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.chirikualii.materidb.data.model.Movie
 import com.chirikualii.materidb.databinding.ItemMovieBinding
+import com.chirikualii.materidb.ui.detailMovie.DetailMovieActivity
 
 class MovieListAdapter :RecyclerView.Adapter<MovieListAdapter.Holder>() {
 
@@ -21,6 +23,11 @@ class MovieListAdapter :RecyclerView.Adapter<MovieListAdapter.Holder>() {
                 .load("https://image.tmdb.org/t/p/w500${data.imagePoster}")
                 .into(binding.ivMovie)
 
+            binding.root.setOnClickListener {
+                val intent = Intent(binding.root.context, DetailMovieActivity::class.java)
+                intent.putExtra(DetailMovieActivity.EXTRA_MOVIE,data)
+                binding.root.context.startActivity(intent)
+            }
         }
     }
 
